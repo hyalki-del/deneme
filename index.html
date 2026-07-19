@@ -3,101 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sahne Senkronizasyonu - HUD v1.0</title>
+    <title>Sahne Senkronizasyonu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
-            background: radial-gradient(circle at center, #0a1224 0%, #020408 100%);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
-        /* Stark Tech Cam Efekti (Glassmorphism) */
-        .stark-panel { 
-            background: rgba(6, 12, 26, 0.6); 
-            border: 1px solid rgba(0, 149, 255, 0.15);
-            backdrop-filter: blur(16px);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255,255,255,0.05);
+        /* Apple Premium Yarı Saydam Cam Efekti */
+        .apple-card { 
+            background-color: rgba(28, 28, 30, 0.65); 
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
         }
-        /* Dijital Kılavuz Çizgileri Dokusu */
-        .hud-grid {
-            background-size: 20px 20px;
-            background-image: linear-gradient(to right, rgba(0, 149, 255, 0.02) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(0, 149, 255, 0.02) 1px, transparent 1px);
+        /* Apple Premium Seçim Gölgesi */
+        .apple-active-shadow {
+            box-shadow: 0 0 20px 0 rgba(0, 113, 227, 0.15);
         }
-        /* Neon Parlama Efektleri */
-        .neon-glow-blue { box-shadow: 0 0 15px rgba(0, 113, 227, 0.25); }
-        .neon-glow-red { box-shadow: 0 0 15px rgba(255, 59, 48, 0.25); }
+        /* Sistem Seçim Kutusu Özelleştirmesi */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
     </style>
 </head>
-<body class="text-[#f5f5f7] p-4 md:p-8 min-h-screen hud-grid">
+<body class="text-[#f5f5f7] p-4 md:p-8 min-h-screen">
     <div class="max-w-6xl mx-auto space-y-6">
         
-        <!-- Taktiksel Üst Kontrol Paneli -->
-        <header class="stark-panel rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative overflow-hidden">
-            <!-- Dekoratif Köşe Çizgisi (Stark UI Ayrıntısı) -->
-            <div class="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-blue-500"></div>
-            <div class="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-blue-500"></div>
-            
+        <!-- Apple Tarzı Minimalist Üst Bar -->
+        <header class="apple-card rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-                <div class="flex items-center gap-2">
-                    <span class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
-                    <h1 class="text-xl font-bold uppercase tracking-widest text-white text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-blue-400">MISSION CONTROL // MATRIX</h1>
-                </div>
-                <p class="text-blue-400/60 text-xs font-mono mt-1">Sistem Durumu: Çevrimiçi // Grup Doluluk Dağılımını Yönetin</p>
+                <h1 class="text-2xl font-semibold tracking-tight text-white">Sahne Senkronizasyonu</h1>
+                <p class="text-[#86868b] text-xs font-normal mt-0.5">Meşgul olduğunuz günleri seçin ve bulutla güncelleyin.</p>
             </div>
             
-            <div class="flex flex-wrap items-center gap-4 z-10">
-                <div class="flex items-center gap-2 font-mono text-xs">
-                    <span class="text-blue-400/80">GRUP ÜYESİ:</span>
-                    <select id="userSelect" class="bg-[#0b132b] border border-blue-500/30 rounded-xl px-4 py-2.5 text-sm font-semibold text-white focus:outline-none focus:ring-1 focus:ring-blue-400 transition-all cursor-pointer">
-                        <option value="serkan">Serkan (Vokal)</option>
-                        <option value="ilker">İlker (Gitar)</option>
-                        <option value="hasan">Hasan (Bas)</option>
-                        <option value="osman">Osman (Davul)</option>
-                        <option value="oguzhan">Oğuzhan (Klavye)</option>
-                    </select>
+            <div class="flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-medium text-[#86868b]">Kullanıcı</span>
+                    <div class="relative">
+                        <select id="userSelect" class="bg-[#2c2c2e] border border-white/5 rounded-xl pl-4 pr-10 py-2.5 text-xs font-medium text-white focus:outline-none focus:ring-1 focus:ring-[#0071e3] transition-all cursor-pointer">
+                            <option value="serkan">Serkan (Vokal)</option>
+                            <option value="ilker">İlker (Gitar)</option>
+                            <option value="hasan">Hasan (Bas)</option>
+                            <option value="osman">Osman (Davul)</option>
+                            <option value="oguzhan">Oğuzhan (Klavye)</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#86868b]">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                    </div>
                 </div>
                 
-                <button id="saveBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs uppercase tracking-wider px-6 py-3 rounded-xl font-semibold transition-all neon-glow-blue">
-                    KAYDET VE GÜNCELLE
+                <button id="saveBtn" class="bg-[#0071e3] hover:bg-[#0077ed] text-white text-xs px-5 py-2.5 rounded-xl font-medium tracking-wide transition-all duration-300">
+                    Kaydet ve Güncelle
                 </button>
             </div>
         </header>
 
-        <!-- Ana HUD Ekranı -->
+        <!-- Ana Ekran Düzeni -->
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             
-            <!-- Siber Takvim Modülü -->
-            <main class="lg:col-span-3 stark-panel rounded-2xl p-6 relative">
-                <div id="loadingOverlay" class="absolute inset-0 rounded-2xl bg-[#020408]/90 flex flex-col items-center justify-center font-mono text-blue-400 z-50 gap-3">
-                    <div class="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
-                    <span id="loadingText" class="text-xs uppercase tracking-wider text-blue-400/70">VERİLER ALINIYOR...</span>
+            <!-- Apple Takvim Arayüzü -->
+            <main class="lg:col-span-3 apple-card rounded-2xl p-6 relative">
+                <!-- Senkronizasyon Katmanı -->
+                <div id="loadingOverlay" class="absolute inset-0 rounded-2xl bg-black/75 flex flex-col items-center justify-center font-medium z-50 gap-2">
+                    <div class="animate-spin rounded-full h-7 w-7 border-[3px] border-[#0071e3] border-t-transparent"></div>
+                    <span id="loadingText" class="text-xs text-[#86868b] tracking-wide mt-1">Eşzamanlanıyor...</span>
                 </div>
 
-                <!-- Ay Navigasyonu -->
-                <div class="flex items-center justify-between mb-6 border-b border-blue-500/10 pb-4">
-                    <button id="prevMonth" class="bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 p-2.5 rounded-xl text-blue-400 transition-all">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                <!-- Ay Seçimi -->
+                <div class="flex items-center justify-between mb-6">
+                    <button id="prevMonth" class="bg-[#2c2c2e]/60 hover:bg-[#2c2c2e] p-2.5 rounded-xl text-white transition-colors duration-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
                     </button>
-                    <h2 id="currentMonthYear" class="text-md font-bold uppercase tracking-widest font-mono text-white">TEMMUZ 2026</h2>
-                    <button id="nextMonth" class="bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 p-2.5 rounded-xl text-blue-400 transition-all">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    <h2 id="currentMonthYear" class="text-sm font-semibold tracking-wider text-white">Temmuz 2026</h2>
+                    <button id="nextMonth" class="bg-[#2c2c2e]/60 hover:bg-[#2c2c2e] p-2.5 rounded-xl text-white transition-colors duration-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                     </button>
                 </div>
 
-                <!-- Gün İsimleri -->
-                <div class="grid grid-cols-7 text-center text-[10px] font-bold font-mono text-blue-400/50 uppercase tracking-widest mb-4">
+                <!-- Gün Başlıkları -->
+                <div class="grid grid-cols-7 text-center text-[10px] font-semibold text-[#86868b] tracking-widest mb-4 uppercase">
                     <div>Paz</div><div>Pzt</div><div>Sal</div><div>Çar</div><div>Per</div><div>Cum</div><div>Cmt</div>
                 </div>
                 
                 <div id="calendarGrid" class="grid grid-cols-7 gap-2"></div>
             </main>
 
-            <!-- Sağ Panel: Taktik Rapor Bölümü -->
+            <!-- Sağ Panel: Grup Üyeleri Sayaçları -->
             <aside class="space-y-4">
-                <div class="stark-panel rounded-2xl p-5 relative">
-                    <div class="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-blue-500/40"></div>
-                    <h3 class="text-[10px] font-bold font-mono uppercase tracking-widest text-blue-400/60 mb-4">// GRUP VERİ ANALİZİ</h3>
-                    <div id="rosterList" class="space-y-3"></div>
+                <div class="apple-card rounded-2xl p-5">
+                    <h3 class="text-[10px] font-semibold uppercase tracking-widest text-[#86868b] mb-4">Grup Üyeleri</h3>
+                    <div id="rosterList" class="space-y-2.5"></div>
                 </div>
             </aside>
         </div>
@@ -106,12 +106,13 @@
     <script>
         const DATABASE_URL = "https://script.google.com/macros/s/AKfycbxzYidVfS3EEtwyOPqzErrHgh2G4nQCTV8KF_tpaj6jiX6SfgY8eHTWerCs3JM7ujq6/exec";
 
+        // Apple Standart Yumuşak Pastel Tonları
         const membersInfo = {
-            serkan: { name: 'Serkan', color: 'bg-red-500/20 border border-red-500/50 text-red-400' },
-            ilker: { name: 'İlker', color: 'bg-blue-500/20 border border-blue-500/50 text-blue-400' },
-            hasan: { name: 'Hasan', color: 'bg-emerald-500/20 border border-emerald-500/50 text-emerald-400' },
-            osman: { name: 'Osman', color: 'bg-amber-500/20 border border-amber-500/50 text-amber-400' },
-            oguzhan: { name: 'Oğuzhan', color: 'bg-purple-500/20 border border-purple-500/50 text-purple-400' }
+            serkan: { name: 'Serkan', color: 'bg-[#ff453a]' },
+            ilker: { name: 'İlker', color: 'bg-[#0a84ff]' },
+            hasan: { name: 'Hasan', color: 'bg-[#30d158]' },
+            osman: { name: 'Osman', color: 'bg-[#ff9f0a]' },
+            oguzhan: { name: 'Oğuzhan', color: 'bg-[#bf5af2]' }
         };
 
         let serverData = { serkan: [], ilker: [], hasan: [], osman: [], oguzhan: [] };
@@ -152,7 +153,7 @@
         }
 
         async function fetchDatabase() {
-            showLoading("DİJİTAL AĞ BAĞLANTISI KURULUYOR...");
+            showLoading("Eşzamanlanıyor...");
             try {
                 const res = await fetch(DATABASE_URL, { redirect: 'follow' });
                 const data = await res.json();
@@ -166,7 +167,7 @@
         }
 
         async function pushToDatabase() {
-            showLoading("VERİ KAPSÜLLERİ BULUTA AKTARILIYOR...");
+            showLoading("Kaydediliyor...");
             try {
                 await fetch(DATABASE_URL, {
                     method: 'POST',
@@ -174,8 +175,7 @@
                     body: JSON.stringify({ name: currentUser, busyDates: localChanges[currentUser] })
                 });
                 await fetchDatabase();
-                alert("MATRİS BAŞARIYLA GÜNCELLENDİ.");
-            } catch (e) { alert("BAĞLANTI HATASI."); }
+            } catch (e) { alert("Bağlantı hatası."); }
             hideLoading();
         }
 
@@ -203,15 +203,15 @@
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             
-            const monthNames = ["OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK"];
-            document.getElementById('currentMonthYear').innerText = `// ${monthNames[month]} ${year}`;
+            const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+            document.getElementById('currentMonthYear').innerText = `${monthNames[month]} ${year}`;
 
             const firstDayIndex = new Date(year, month, 1).getDay();
             const totalDays = new Date(year, month + 1, 0).getDate();
 
             for (let i = 0; i < firstDayIndex; i++) {
                 const emptyCell = document.createElement('div');
-                emptyCell.className = 'bg-transparent min-h-[75px]';
+                emptyCell.className = 'bg-transparent min-h-[70px]';
                 grid.appendChild(emptyCell);
             }
 
@@ -223,19 +223,19 @@
                 const isFree = busyMembers.length === 0;
 
                 const btn = document.createElement('button');
-                btn.className = `min-h-[85px] flex flex-col justify-between p-3 rounded-xl border font-mono transition-all duration-300 ${
+                btn.className = `min-h-[75px] flex flex-col justify-between p-2.5 rounded-xl border text-left transition-all duration-200 ${
                     isCurrentBusy 
-                    ? 'border-red-500 bg-red-950/20 neon-glow-red' 
+                    ? 'border-[#ff453a]/40 bg-[#ff453a]/10 hover:bg-[#ff453a]/15' 
                     : isFree 
-                    ? 'border-blue-500/10 bg-blue-950/5 hover:border-blue-400/40 hover:bg-blue-950/20' 
-                    : 'border-blue-400/30 bg-blue-950/30 hover:bg-blue-950/50'
+                    ? 'border-transparent bg-[#2c2c2e]/40 hover:bg-[#2c2c2e]/80' 
+                    : 'border-transparent bg-[#2c2c2e]/80 hover:bg-[#3a3a3c]'
                 }`;
                 btn.onclick = () => toggleDate(dateTarget);
 
                 btn.innerHTML = `
-                    <span class="text-xs font-bold ${isFree ? 'text-blue-400' : 'text-gray-500'}">${String(day).padStart(2, '0')}</span>
+                    <span class="text-xs font-semibold ${isFree ? 'text-[#30d158]' : 'text-[#86868b]'}">${day}</span>
                     <div class="flex flex-wrap gap-1 mt-2">
-                        ${busyMembers.map(k => `<span class="text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide ${membersInfo[k].color}">${membersInfo[k].name[0]}</span>`).join('')}
+                        ${busyMembers.map(k => `<span class="text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold text-white uppercase ${membersInfo[k].color}">${membersInfo[k].name[0]}</span>`).join('')}
                     </div>
                 `;
                 grid.appendChild(btn);
@@ -243,22 +243,22 @@
 
             const roster = document.getElementById('rosterList');
             roster.innerHTML = Object.keys(localChanges).map(k => `
-                <div class="flex items-center justify-between font-mono text-xs bg-[#091124]/60 p-3 rounded-xl border border-blue-500/10">
-                    <div class="flex items-center gap-2">
-                        <span class="h-2 w-2 rounded-full ${membersInfo[k].color.split(' ')[0]}"></span>
-                        <span class="text-gray-300">${membersInfo[k].name.toUpperCase()}</span>
+                <div class="flex items-center justify-between text-xs bg-[#2c2c2e]/30 p-3 rounded-xl border border-white/5">
+                    <div class="flex items-center gap-2.5">
+                        <span class="h-2 w-2 rounded-full ${membersInfo[k].color}"></span>
+                        <span class="font-medium text-[#f5f5f7]">${membersInfo[k].name}</span>
                     </div>
-                    <span class="text-[10px] text-blue-400/70 bg-blue-950/50 px-2 py-0.5 rounded border border-blue-500/20">${localChanges[k].length} DAYS BUSY</span>
+                    <span class="text-[11px] font-medium text-[#86868b]">${localChanges[k].length} gün</span>
                 </div>
             `).join('');
             
             const hasChanges = JSON.stringify(serverData[currentUser]) !== JSON.stringify(localChanges[currentUser]);
             if(hasChanges) {
-                saveBtn.className = "bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs uppercase tracking-wider px-6 py-3 rounded-xl font-semibold transition-all scale-[1.02] shadow-[0_0_15px_rgba(16,185,129,0.3)]";
-                saveBtn.innerText = "DEĞİŞİKLİKLERİ YAYINLA";
+                saveBtn.className = "bg-[#30d158] hover:bg-[#34c759] text-white text-xs px-5 py-2.5 rounded-xl font-medium tracking-wide transition-all duration-300 scale-[1.01] apple-active-shadow";
+                saveBtn.innerText = "Değişiklikleri Kaydet";
             } else {
-                saveBtn.className = "bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs uppercase tracking-wider px-6 py-3 rounded-xl font-semibold transition-all neon-glow-blue";
-                saveBtn.innerText = "KAYDET VE GÜNCELLE";
+                saveBtn.className = "bg-[#0071e3] hover:bg-[#0077ed] text-white text-xs px-5 py-2.5 rounded-xl font-medium tracking-wide transition-all duration-300";
+                saveBtn.innerText = "Kaydet ve Güncelle";
             }
         }
 
