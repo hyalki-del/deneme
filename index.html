@@ -11,13 +11,11 @@
             font-family: 'Courier New', Courier, monospace;
             -webkit-font-smoothing: antialiased;
         }
-        /* Kara Şimşek K.I.T.T. Elektronik Panel Efekti */
         .kitt-panel { 
             background-color: #0d0d14; 
             border: 2px solid #ff0000;
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.8);
         }
-        /* K.I.T.T. Kırmızı Tarayıcı Işığı Animasyonu (Scanner) */
         .scanner-bar {
             height: 4px;
             background: linear-gradient(to right, transparent, #ff0000, #ff4d4d, #ff0000, transparent);
@@ -29,7 +27,6 @@
             50% { background-position: 100% 0%; }
             100% { background-position: 0% 0%; }
         }
-        /* Dijital Kılavuz Çizgileri */
         .retro-grid {
             background-size: 40px 40px;
             background-image: linear-gradient(to right, rgba(255, 0, 0, 0.02) 1px, transparent 1px),
@@ -47,7 +44,6 @@
         
         <!-- Üst Panel: K.I.T.T. Dashboard -->
         <header class="kitt-panel rounded-xl p-6 relative overflow-hidden">
-            <!-- Üst Kırmızı Tarayıcı Led şerit -->
             <div class="absolute top-0 left-0 w-full scanner-bar"></div>
             
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-2">
@@ -59,6 +55,11 @@
                 </div>
                 
                 <div class="flex flex-wrap items-center gap-4 z-10">
+                    <!-- Knight Rider Ses Sistemi Butonu -->
+                    <button id="audioBtn" class="bg-black hover:bg-[#ff0000]/20 text-[#ff0000] font-black text-xs uppercase tracking-widest px-4 py-2 rounded-lg border-2 border-[#ff0000] transition-all flex items-center gap-2">
+                        <span id="audioStatusDot" class="h-2 w-2 rounded-full bg-gray-600"></span> AUDIO SYS // OFF
+                    </button>
+
                     <div class="flex items-center gap-2 text-xs font-bold">
                         <span class="text-[#ff9900]">ÜYE SEÇİMİ:</span>
                         <div class="relative">
@@ -69,13 +70,10 @@
                                 <option value="osman">OSMAN (DAVUL)</option>
                                 <option value="oguzhan">OĞUZHAN (KLAVYE)</option>
                             </select>
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-[#ff9900]">
-                                ▼
-                            </div>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-[#ff9900]">▼</div>
                         </div>
                     </div>
                     
-                    <!-- İkonik Turbo Boost / Kaydet Butonu -->
                     <button id="saveBtn" class="bg-[#ff0000] hover:bg-[#cc0000] text-black font-black text-xs uppercase tracking-widest px-6 py-3 rounded-lg border-2 border-white transition-all shadow-[0_0_15px_rgba(255,0,0,0.5)]">
                         TURBO BOOST // GÜNCELLE
                     </button>
@@ -85,10 +83,7 @@
 
         <!-- Ana Arayüz Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            
-            <!-- Dijital Takvim Ekranı -->
             <main class="lg:col-span-3 kitt-panel rounded-xl p-6 relative">
-                <!-- Veri Yükleme Ekranı -->
                 <div id="loadingOverlay" class="absolute inset-0 rounded-lg bg-black/90 flex flex-col items-center justify-center font-bold text-[#ff0000] z-50 gap-2">
                     <div class="w-12 bg-gray-900 h-2 rounded overflow-hidden border border-[#ff0000]">
                         <div class="bg-[#ff0000] h-full w-1/2 animate-ping"></div>
@@ -96,26 +91,18 @@
                     <span id="loadingText" class="text-xs tracking-widest mt-2 animate-pulse">VERİ KANALLARI AÇILIYOR...</span>
                 </div>
 
-                <!-- Ay Navigasyonu -->
                 <div class="flex items-center justify-between mb-6 border-b-2 border-[#ff0000]/20 pb-4">
-                    <button id="prevMonth" class="bg-black hover:bg-[#ff0000]/10 border-2 border-[#ff0000] px-3 py-1.5 rounded text-[#ff0000] font-black transition-all">
-                        &lt;&lt;
-                    </button>
+                    <button id="prevMonth" class="bg-black hover:bg-[#ff0000]/10 border-2 border-[#ff0000] px-3 py-1.5 rounded text-[#ff0000] font-black transition-all">&lt;&lt;</button>
                     <h2 id="currentMonthYear" class="text-md font-black tracking-widest text-white">TEMMUZ 2026</h2>
-                    <button id="nextMonth" class="bg-black hover:bg-[#ff0000]/10 border-2 border-[#ff0000] px-3 py-1.5 rounded text-[#ff0000] font-black transition-all">
-                        &gt;&gt;
-                    </button>
+                    <button id="nextMonth" class="bg-black hover:bg-[#ff0000]/10 border-2 border-[#ff0000] px-3 py-1.5 rounded text-[#ff0000] font-black transition-all">&gt;&gt;</button>
                 </div>
 
-                <!-- Gün Başlıkları -->
                 <div class="grid grid-cols-7 text-center text-xs font-black text-[#ff9900] tracking-wider mb-4">
                     <div>PAZ</div><div>PZT</div><div>SAL</div><div>ÇAR</div><div>PER</div><div>CUM</div><div>CMT</div>
                 </div>
-                
                 <div id="calendarGrid" class="grid grid-cols-7 gap-2"></div>
             </main>
 
-            <!-- Sağ Panel: K.I.T.T. Sistem Durum Raporu -->
             <aside class="space-y-4">
                 <div class="kitt-panel rounded-xl p-5">
                     <h3 class="text-xs font-black tracking-widest text-white border-b border-[#ff0000]/20 pb-2 mb-4">// SİSTEM RAPORU</h3>
@@ -128,7 +115,6 @@
     <script>
         const DATABASE_URL = "https://script.google.com/macros/s/AKfycbxzYidVfS3EEtwyOPqzErrHgh2G4nQCTV8KF_tpaj6jiX6SfgY8eHTWerCs3JM7ujq6/exec";
 
-        // 80'ler Bilgisayar Grafik Renkleri
         const membersInfo = {
             serkan: { name: 'SRK', color: 'bg-[#ff0000] text-black border border-white' },
             ilker: { name: 'ILK', color: 'bg-[#ff9900] text-black border border-white' },
@@ -146,11 +132,63 @@
         const saveBtn = document.getElementById('saveBtn');
         const prevMonthBtn = document.getElementById('prevMonth');
         const nextMonthBtn = document.getElementById('nextMonth');
+        const audioBtn = document.getElementById('audioBtn');
+        const audioStatusDot = document.getElementById('audioStatusDot');
 
         userSelect.addEventListener('change', (e) => { currentUser = e.target.value; render(); });
         prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); render(); });
         nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); render(); });
         saveBtn.addEventListener('click', pushToDatabase);
+
+        // --- K.I.T.T. MİDİ RETRO SYNTH MOTORU ---
+        let audioCtx = null;
+        let audioLoopId = null;
+        let isPlaying = false;
+
+        // Knight Rider Tema Bass Notaları Frekansları
+        const melody = [110.00, 110.00, 130.81, 110.00, 146.83, 110.00, 130.81, 110.00]; 
+        let noteIndex = 0;
+
+        function playSynthTheme() {
+            if (!isPlaying) return;
+            
+            let osc = audioCtx.createOscillator();
+            let gainNode = audioCtx.createGain();
+            
+            // 80'ler tipi testere dişi synth dalgası
+            osc.type = 'sawtooth'; 
+            osc.frequency.setValueAtTime(melody[noteIndex], audioCtx.currentTime);
+            
+            gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime); // Kulak tırmalamayan arka plan seviyesi
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+            
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+            
+            noteIndex = (noteIndex + 1) % melody.length;
+            audioLoopId = setTimeout(playSynthTheme, 150); // Knight Rider temposu
+        }
+
+        audioBtn.addEventListener('click', () => {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            if (!isPlaying) {
+                isPlaying = true;
+                audioStatusDot.className = "h-2 w-2 rounded-full bg-[#ff0000] animate-ping";
+                audioBtn.innerHTML = `<span id="audioStatusDot" class="h-2 w-2 rounded-full bg-[#ff0000] animate-pulse"></span> AUDIO SYS // ON`;
+                playSynthTheme();
+            } else {
+                isPlaying = false;
+                clearTimeout(audioLoopId);
+                audioBtn.innerHTML = `<span id="audioStatusDot" class="h-2 w-2 rounded-full bg-gray-600"></span> AUDIO SYS // OFF`;
+            }
+        });
+        // ----------------------------------------
 
         function fixDateFormat(dStr) {
             if (!dStr) return "";
@@ -282,237 +320,6 @@
             } else {
                 saveBtn.className = "bg-[#ff0000] hover:bg-[#cc0000] text-black font-black text-xs uppercase tracking-widest px-6 py-3 rounded-lg border-2 border-white transition-all shadow-[0_0_15px_rgba(255,0,0,0.5)]";
                 saveBtn.innerText = "TURBO BOOST // GÜNCELLE";
-            }
-        }
-
-        fetchDatabase();
-    </script>
-</body>
-</html>        <header class="apple-card rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-                <h1 class="text-2xl font-semibold tracking-tight text-white">Sahne Senkronizasyonu</h1>
-                <p class="text-[#86868b] text-xs font-normal mt-0.5">Meşgul olduğunuz günleri seçin ve bulutla güncelleyin.</p>
-            </div>
-            
-            <div class="flex flex-wrap items-center gap-3">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-medium text-[#86868b]">Kullanıcı</span>
-                    <div class="relative">
-                        <select id="userSelect" class="bg-[#2c2c2e] border border-white/5 rounded-xl pl-4 pr-10 py-2.5 text-xs font-medium text-white focus:outline-none focus:ring-1 focus:ring-[#0071e3] transition-all cursor-pointer">
-                            <option value="serkan">Serkan (Vokal)</option>
-                            <option value="ilker">İlker (Gitar)</option>
-                            <option value="hasan">Hasan (Bas)</option>
-                            <option value="osman">Osman (Davul)</option>
-                            <option value="oguzhan">Oğuzhan (Klavye)</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#86868b]">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
-                        </div>
-                    </div>
-                </div>
-                
-                <button id="saveBtn" class="bg-[#0071e3] hover:bg-[#0077ed] text-white text-xs px-5 py-2.5 rounded-xl font-medium tracking-wide transition-all duration-300">
-                    Kaydet ve Güncelle
-                </button>
-            </div>
-        </header>
-
-        <!-- Ana Ekran Düzeni -->
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            
-            <!-- Apple Takvim Arayüzü -->
-            <main class="lg:col-span-3 apple-card rounded-2xl p-6 relative">
-                <!-- Senkronizasyon Katmanı -->
-                <div id="loadingOverlay" class="absolute inset-0 rounded-2xl bg-black/75 flex flex-col items-center justify-center font-medium z-50 gap-2">
-                    <div class="animate-spin rounded-full h-7 w-7 border-[3px] border-[#0071e3] border-t-transparent"></div>
-                    <span id="loadingText" class="text-xs text-[#86868b] tracking-wide mt-1">Eşzamanlanıyor...</span>
-                </div>
-
-                <!-- Ay Seçimi -->
-                <div class="flex items-center justify-between mb-6">
-                    <button id="prevMonth" class="bg-[#2c2c2e]/60 hover:bg-[#2c2c2e] p-2.5 rounded-xl text-white transition-colors duration-200">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-                    </button>
-                    <h2 id="currentMonthYear" class="text-sm font-semibold tracking-wider text-white">Temmuz 2026</h2>
-                    <button id="nextMonth" class="bg-[#2c2c2e]/60 hover:bg-[#2c2c2e] p-2.5 rounded-xl text-white transition-colors duration-200">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-                    </button>
-                </div>
-
-                <!-- Gün Başlıkları -->
-                <div class="grid grid-cols-7 text-center text-[10px] font-semibold text-[#86868b] tracking-widest mb-4 uppercase">
-                    <div>Paz</div><div>Pzt</div><div>Sal</div><div>Çar</div><div>Per</div><div>Cum</div><div>Cmt</div>
-                </div>
-                
-                <div id="calendarGrid" class="grid grid-cols-7 gap-2"></div>
-            </main>
-
-            <!-- Sağ Panel: Grup Üyeleri Sayaçları -->
-            <aside class="space-y-4">
-                <div class="apple-card rounded-2xl p-5">
-                    <h3 class="text-[10px] font-semibold uppercase tracking-widest text-[#86868b] mb-4">Grup Üyeleri</h3>
-                    <div id="rosterList" class="space-y-2.5"></div>
-                </div>
-            </aside>
-        </div>
-    </div>
-
-    <script>
-        const DATABASE_URL = "https://script.google.com/macros/s/AKfycbxzYidVfS3EEtwyOPqzErrHgh2G4nQCTV8KF_tpaj6jiX6SfgY8eHTWerCs3JM7ujq6/exec";
-
-        // Apple Standart Yumuşak Pastel Tonları
-        const membersInfo = {
-            serkan: { name: 'Serkan', color: 'bg-[#ff453a]' },
-            ilker: { name: 'İlker', color: 'bg-[#0a84ff]' },
-            hasan: { name: 'Hasan', color: 'bg-[#30d158]' },
-            osman: { name: 'Osman', color: 'bg-[#ff9f0a]' },
-            oguzhan: { name: 'Oğuzhan', color: 'bg-[#bf5af2]' }
-        };
-
-        let serverData = { serkan: [], ilker: [], hasan: [], osman: [], oguzhan: [] };
-        let localChanges = { serkan: [], ilker: [], hasan: [], osman: [], oguzhan: [] };
-        let currentUser = 'serkan';
-        let currentDate = new Date(2026, 6, 1);
-
-        const userSelect = document.getElementById('userSelect');
-        const saveBtn = document.getElementById('saveBtn');
-        const prevMonthBtn = document.getElementById('prevMonth');
-        const nextMonthBtn = document.getElementById('nextMonth');
-
-        userSelect.addEventListener('change', (e) => { currentUser = e.target.value; render(); });
-        prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); render(); });
-        nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); render(); });
-        saveBtn.addEventListener('click', pushToDatabase);
-
-        function fixDateFormat(dStr) {
-            if (!dStr) return "";
-            let clean = String(dStr).trim();
-            if (clean.includes(" ") && clean.length > 10) {
-                try {
-                    let d = new Date(clean);
-                    if (!isNaN(d.getTime())) {
-                        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-                    }
-                } catch(e){}
-            }
-            if (clean.includes(".")) {
-                let p = clean.split(".");
-                if (p.length === 3) return `${p[2]}-${String(p[1]).padStart(2, '0')}-${String(p[0]).padStart(2, '0')}`;
-            }
-            if (clean.includes("-")) {
-                let p = clean.split("-");
-                if (p.length === 3) return `${p[0]}-${String(p[1]).padStart(2, '0')}-${String(p[2]).padStart(2, '0')}`;
-            }
-            return clean;
-        }
-
-        async function fetchDatabase() {
-            showLoading("Eşzamanlanıyor...");
-            try {
-                const res = await fetch(DATABASE_URL, { redirect: 'follow' });
-                const data = await res.json();
-                Object.keys(serverData).forEach(k => { 
-                    serverData[k] = (data[k] || []).map(d => fixDateFormat(d)).filter(Boolean); 
-                });
-                localChanges = JSON.parse(JSON.stringify(serverData));
-            } catch (e) { console.error(e); }
-            hideLoading();
-            render();
-        }
-
-        async function pushToDatabase() {
-            showLoading("Kaydediliyor...");
-            try {
-                await fetch(DATABASE_URL, {
-                    method: 'POST',
-                    redirect: 'follow',
-                    body: JSON.stringify({ name: currentUser, busyDates: localChanges[currentUser] })
-                });
-                await fetchDatabase();
-            } catch (e) { alert("Bağlantı hatası."); }
-            hideLoading();
-        }
-
-        function toggleDate(dateStr) {
-            const list = localChanges[currentUser];
-            const idx = list.indexOf(dateStr);
-            if (idx > -1) list.splice(idx, 1);
-            else list.push(dateStr);
-            render();
-        }
-
-        function showLoading(text) {
-            document.getElementById('loadingText').innerText = text;
-            document.getElementById('loadingOverlay').style.display = 'flex';
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
-
-        function render() {
-            const grid = document.getElementById('calendarGrid');
-            grid.innerHTML = '';
-            
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            
-            const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-            document.getElementById('currentMonthYear').innerText = `${monthNames[month]} ${year}`;
-
-            const firstDayIndex = new Date(year, month, 1).getDay();
-            const totalDays = new Date(year, month + 1, 0).getDate();
-
-            for (let i = 0; i < firstDayIndex; i++) {
-                const emptyCell = document.createElement('div');
-                emptyCell.className = 'bg-transparent min-h-[70px]';
-                grid.appendChild(emptyCell);
-            }
-
-            for (let day = 1; day <= totalDays; day++) {
-                const dateTarget = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                
-                const busyMembers = Object.keys(localChanges).filter(k => localChanges[k].includes(dateTarget));
-                const isCurrentBusy = localChanges[currentUser].includes(dateTarget);
-                const isFree = busyMembers.length === 0;
-
-                const btn = document.createElement('button');
-                btn.className = `min-h-[75px] flex flex-col justify-between p-2.5 rounded-xl border text-left transition-all duration-200 ${
-                    isCurrentBusy 
-                    ? 'border-[#ff453a]/40 bg-[#ff453a]/10 hover:bg-[#ff453a]/15' 
-                    : isFree 
-                    ? 'border-transparent bg-[#2c2c2e]/40 hover:bg-[#2c2c2e]/80' 
-                    : 'border-transparent bg-[#2c2c2e]/80 hover:bg-[#3a3a3c]'
-                }`;
-                btn.onclick = () => toggleDate(dateTarget);
-
-                btn.innerHTML = `
-                    <span class="text-xs font-semibold ${isFree ? 'text-[#30d158]' : 'text-[#86868b]'}">${day}</span>
-                    <div class="flex flex-wrap gap-1 mt-2">
-                        ${busyMembers.map(k => `<span class="text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold text-white uppercase ${membersInfo[k].color}">${membersInfo[k].name[0]}</span>`).join('')}
-                    </div>
-                `;
-                grid.appendChild(btn);
-            }
-
-            const roster = document.getElementById('rosterList');
-            roster.innerHTML = Object.keys(localChanges).map(k => `
-                <div class="flex items-center justify-between text-xs bg-[#2c2c2e]/30 p-3 rounded-xl border border-white/5">
-                    <div class="flex items-center gap-2.5">
-                        <span class="h-2 w-2 rounded-full ${membersInfo[k].color}"></span>
-                        <span class="font-medium text-[#f5f5f7]">${membersInfo[k].name}</span>
-                    </div>
-                    <span class="text-[11px] font-medium text-[#86868b]">${localChanges[k].length} gün</span>
-                </div>
-            `).join('');
-            
-            const hasChanges = JSON.stringify(serverData[currentUser]) !== JSON.stringify(localChanges[currentUser]);
-            if(hasChanges) {
-                saveBtn.className = "bg-[#30d158] hover:bg-[#34c759] text-white text-xs px-5 py-2.5 rounded-xl font-medium tracking-wide transition-all duration-300 scale-[1.01] apple-active-shadow";
-                saveBtn.innerText = "Değişiklikleri Kaydet";
-            } else {
-                saveBtn.className = "bg-[#0071e3] hover:bg-[#0077ed] text-white text-xs px-5 py-2.5 rounded-xl font-medium tracking-wide transition-all duration-300";
-                saveBtn.innerText = "Kaydet ve Güncelle";
             }
         }
 
