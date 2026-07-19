@@ -3,26 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sahne Senkronizasyonu</title>
+    <title>K.I.T.T. - Sahne Senkronizasyonu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
-            background-color: #000000;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #050508;
+            font-family: 'Courier New', Courier, monospace;
             -webkit-font-smoothing: antialiased;
         }
-        /* Apple Premium Yarı Saydam Cam Efekti */
-        .apple-card { 
-            background-color: rgba(28, 28, 30, 0.65); 
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+        /* Kara Şimşek K.I.T.T. Elektronik Panel Efekti */
+        .kitt-panel { 
+            background-color: #0d0d14; 
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.8);
         }
-        /* Apple Premium Seçim Gölgesi */
-        .apple-active-shadow {
-            box-shadow: 0 0 20px 0 rgba(0, 113, 227, 0.15);
+        /* K.I.T.T. Kırmızı Tarayıcı Işığı Animasyonu (Scanner) */
+        .scanner-bar {
+            height: 4px;
+            background: linear-gradient(to right, transparent, #ff0000, #ff4d4d, #ff0000, transparent);
+            background-size: 200% 100%;
+            animation: scan 2s infinite linear;
         }
-        /* Sistem Seçim Kutusu Özelleştirmesi */
+        @keyframes scan {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 0%; }
+            100% { background-position: 0% 0%; }
+        }
+        /* Dijital Kılavuz Çizgileri */
+        .retro-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 0, 0, 0.02) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 0, 0, 0.02) 1px, transparent 1px);
+        }
         select {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -30,11 +42,253 @@
         }
     </style>
 </head>
-<body class="text-[#f5f5f7] p-4 md:p-8 min-h-screen">
+<body class="text-[#ff4d4d] p-4 md:p-8 min-h-screen retro-grid">
     <div class="max-w-6xl mx-auto space-y-6">
         
-        <!-- Apple Tarzı Minimalist Üst Bar -->
-        <header class="apple-card rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <!-- Üst Panel: K.I.T.T. Dashboard -->
+        <header class="kitt-panel rounded-xl p-6 relative overflow-hidden">
+            <!-- Üst Kırmızı Tarayıcı Led şerit -->
+            <div class="absolute top-0 left-0 w-full scanner-bar"></div>
+            
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-2">
+                <div>
+                    <h1 class="text-xl font-black tracking-widest text-white flex items-center gap-2">
+                        <span class="text-[#ff0000] animate-pulse">●</span> K.I.T.T. MONITORING SYSTEM
+                    </h1>
+                    <p class="text-[#ff9900] text-xs font-bold mt-1">OPERASYON: GRUP UYGUNLUK MATRİSİ // v2.0</p>
+                </div>
+                
+                <div class="flex flex-wrap items-center gap-4 z-10">
+                    <div class="flex items-center gap-2 text-xs font-bold">
+                        <span class="text-[#ff9900]">ÜYE SEÇİMİ:</span>
+                        <div class="relative">
+                            <select id="userSelect" class="bg-black border-2 border-[#ff9900] text-[#ff9900] rounded-lg pl-3 pr-8 py-2 text-xs font-bold focus:outline-none cursor-pointer tracking-wider">
+                                <option value="serkan">SERKAN (VOKAL)</option>
+                                <option value="ilker">İLKER (GİTAR)</option>
+                                <option value="hasan">HASAN (BAS)</option>
+                                <option value="osman">OSMAN (DAVUL)</option>
+                                <option value="oguzhan">OĞUZHAN (KLAVYE)</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-[#ff9900]">
+                                ▼
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- İkonik Turbo Boost / Kaydet Butonu -->
+                    <button id="saveBtn" class="bg-[#ff0000] hover:bg-[#cc0000] text-black font-black text-xs uppercase tracking-widest px-6 py-3 rounded-lg border-2 border-white transition-all shadow-[0_0_15px_rgba(255,0,0,0.5)]">
+                        TURBO BOOST // GÜNCELLE
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Ana Arayüz Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            
+            <!-- Dijital Takvim Ekranı -->
+            <main class="lg:col-span-3 kitt-panel rounded-xl p-6 relative">
+                <!-- Veri Yükleme Ekranı -->
+                <div id="loadingOverlay" class="absolute inset-0 rounded-lg bg-black/90 flex flex-col items-center justify-center font-bold text-[#ff0000] z-50 gap-2">
+                    <div class="w-12 bg-gray-900 h-2 rounded overflow-hidden border border-[#ff0000]">
+                        <div class="bg-[#ff0000] h-full w-1/2 animate-ping"></div>
+                    </div>
+                    <span id="loadingText" class="text-xs tracking-widest mt-2 animate-pulse">VERİ KANALLARI AÇILIYOR...</span>
+                </div>
+
+                <!-- Ay Navigasyonu -->
+                <div class="flex items-center justify-between mb-6 border-b-2 border-[#ff0000]/20 pb-4">
+                    <button id="prevMonth" class="bg-black hover:bg-[#ff0000]/10 border-2 border-[#ff0000] px-3 py-1.5 rounded text-[#ff0000] font-black transition-all">
+                        &lt;&lt;
+                    </button>
+                    <h2 id="currentMonthYear" class="text-md font-black tracking-widest text-white">TEMMUZ 2026</h2>
+                    <button id="nextMonth" class="bg-black hover:bg-[#ff0000]/10 border-2 border-[#ff0000] px-3 py-1.5 rounded text-[#ff0000] font-black transition-all">
+                        &gt;&gt;
+                    </button>
+                </div>
+
+                <!-- Gün Başlıkları -->
+                <div class="grid grid-cols-7 text-center text-xs font-black text-[#ff9900] tracking-wider mb-4">
+                    <div>PAZ</div><div>PZT</div><div>SAL</div><div>ÇAR</div><div>PER</div><div>CUM</div><div>CMT</div>
+                </div>
+                
+                <div id="calendarGrid" class="grid grid-cols-7 gap-2"></div>
+            </main>
+
+            <!-- Sağ Panel: K.I.T.T. Sistem Durum Raporu -->
+            <aside class="space-y-4">
+                <div class="kitt-panel rounded-xl p-5">
+                    <h3 class="text-xs font-black tracking-widest text-white border-b border-[#ff0000]/20 pb-2 mb-4">// SİSTEM RAPORU</h3>
+                    <div id="rosterList" class="space-y-3"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        const DATABASE_URL = "https://script.google.com/macros/s/AKfycbxzYidVfS3EEtwyOPqzErrHgh2G4nQCTV8KF_tpaj6jiX6SfgY8eHTWerCs3JM7ujq6/exec";
+
+        // 80'ler Bilgisayar Grafik Renkleri
+        const membersInfo = {
+            serkan: { name: 'SRK', color: 'bg-[#ff0000] text-black border border-white' },
+            ilker: { name: 'ILK', color: 'bg-[#ff9900] text-black border border-white' },
+            hasan: { name: 'HSN', color: 'bg-[#ffff00] text-black border border-black' },
+            osman: { name: 'OSM', color: 'bg-[#00ff00] text-black border border-white' },
+            oguzhan: { name: 'OGZ', color: 'bg-[#00ffff] text-black border border-white' }
+        };
+
+        let serverData = { serkan: [], ilker: [], hasan: [], osman: [], oguzhan: [] };
+        let localChanges = { serkan: [], ilker: [], hasan: [], osman: [], oguzhan: [] };
+        let currentUser = 'serkan';
+        let currentDate = new Date(2026, 6, 1);
+
+        const userSelect = document.getElementById('userSelect');
+        const saveBtn = document.getElementById('saveBtn');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+
+        userSelect.addEventListener('change', (e) => { currentUser = e.target.value; render(); });
+        prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); render(); });
+        nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); render(); });
+        saveBtn.addEventListener('click', pushToDatabase);
+
+        function fixDateFormat(dStr) {
+            if (!dStr) return "";
+            let clean = String(dStr).trim();
+            if (clean.includes(" ") && clean.length > 10) {
+                try {
+                    let d = new Date(clean);
+                    if (!isNaN(d.getTime())) {
+                        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                    }
+                } catch(e){}
+            }
+            if (clean.includes(".")) {
+                let p = clean.split(".");
+                if (p.length === 3) return `${p[2]}-${String(p[1]).padStart(2, '0')}-${String(p[0]).padStart(2, '0')}`;
+            }
+            if (clean.includes("-")) {
+                let p = clean.split("-");
+                if (p.length === 3) return `${p[0]}-${String(p[1]).padStart(2, '0')}-${String(p[2]).padStart(2, '0')}`;
+            }
+            return clean;
+        }
+
+        async function fetchDatabase() {
+            showLoading("VERİ KANALLARI AÇILIYOR...");
+            try {
+                const res = await fetch(DATABASE_URL, { redirect: 'follow' });
+                const data = await res.json();
+                Object.keys(serverData).forEach(k => { 
+                    serverData[k] = (data[k] || []).map(d => fixDateFormat(d)).filter(Boolean); 
+                });
+                localChanges = JSON.parse(JSON.stringify(serverData));
+            } catch (e) { console.error(e); }
+            hideLoading();
+            render();
+        }
+
+        async function pushToDatabase() {
+            showLoading("VERİ AKTARIMI BAŞLADI...");
+            try {
+                await fetch(DATABASE_URL, {
+                    method: 'POST',
+                    redirect: 'follow',
+                    body: JSON.stringify({ name: currentUser, busyDates: localChanges[currentUser] })
+                });
+                await fetchDatabase();
+                alert("SİSTEM GÜNCELLENDİ. K.I.T.T. HAZIR.");
+            } catch (e) { alert("AKTARIM HATASI."); }
+            hideLoading();
+        }
+
+        function toggleDate(dateStr) {
+            const list = localChanges[currentUser];
+            const idx = list.indexOf(dateStr);
+            if (idx > -1) list.splice(idx, 1);
+            else list.push(dateStr);
+            render();
+        }
+
+        function showLoading(text) {
+            document.getElementById('loadingText').innerText = text;
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        function render() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            const monthNames = ["OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK"];
+            document.getElementById('currentMonthYear').innerText = `// ${monthNames[month]} ${year}`;
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'bg-transparent min-h-[70px]';
+                grid.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const dateTarget = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                const busyMembers = Object.keys(localChanges).filter(k => localChanges[k].includes(dateTarget));
+                const isCurrentBusy = localChanges[currentUser].includes(dateTarget);
+                const isFree = busyMembers.length === 0;
+
+                const btn = document.createElement('button');
+                btn.className = `min-h-[75px] flex flex-col justify-between p-2 rounded-lg border-2 text-left transition-all duration-200 ${
+                    isCurrentBusy 
+                    ? 'border-[#ff0000] bg-[#ff0000]/10 shadow-[0_0_10px_rgba(255,0,0,0.3)]' 
+                    : isFree 
+                    ? 'border-[#ff0000]/20 bg-black hover:border-[#ff0000]/60' 
+                    : 'border-[#ff9900]/40 bg-[#ff9900]/5 hover:bg-[#ff9900]/10'
+                }`;
+                btn.onclick = () => toggleDate(dateTarget);
+
+                btn.innerHTML = `
+                    <span class="text-xs font-black ${isFree ? 'text-[#00ff00]' : 'text-[#ff4d4d]'}">${String(day).padStart(2, '0')}</span>
+                    <div class="flex flex-wrap gap-1 mt-1">
+                        ${busyMembers.map(k => `<span class="text-[9px] px-1 rounded font-black uppercase ${membersInfo[k].color}">${membersInfo[k].name}</span>`).join('')}
+                    </div>
+                `;
+                grid.appendChild(btn);
+            }
+
+            const roster = document.getElementById('rosterList');
+            roster.innerHTML = Object.keys(localChanges).map(k => `
+                <div class="flex items-center justify-between text-xs bg-black p-3 rounded-lg border border-[#ff0000]/20 font-bold">
+                    <div class="flex items-center gap-2">
+                        <span class="inline-block px-1 rounded uppercase text-[10px] ${membersInfo[k].color.split(' ')[0]} text-black">${membersInfo[k].name}</span>
+                        <span class="text-white">${k.toUpperCase()}</span>
+                    </div>
+                    <span class="text-[#ff9900] font-mono">[${localChanges[k].length} BLOKE]</span>
+                </div>
+            `).join('');
+            
+            const hasChanges = JSON.stringify(serverData[currentUser]) !== JSON.stringify(localChanges[currentUser]);
+            if(hasChanges) {
+                saveBtn.className = "bg-[#00ff00] hover:bg-[#00cc00] text-black font-black text-xs uppercase tracking-widest px-6 py-3 rounded-lg border-2 border-white transition-all scale-[1.02] shadow-[0_0_20px_rgba(0,255,0,0.6)] animate-pulse";
+                saveBtn.innerText = "VERİLERİ AĞA YAZ // ONAY";
+            } else {
+                saveBtn.className = "bg-[#ff0000] hover:bg-[#cc0000] text-black font-black text-xs uppercase tracking-widest px-6 py-3 rounded-lg border-2 border-white transition-all shadow-[0_0_15px_rgba(255,0,0,0.5)]";
+                saveBtn.innerText = "TURBO BOOST // GÜNCELLE";
+            }
+        }
+
+        fetchDatabase();
+    </script>
+</body>
+</html>        <header class="apple-card rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-semibold tracking-tight text-white">Sahne Senkronizasyonu</h1>
                 <p class="text-[#86868b] text-xs font-normal mt-0.5">Meşgul olduğunuz günleri seçin ve bulutla güncelleyin.</p>
