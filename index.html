@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahne Senkronizasyonu - HUD v1.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            background: radial-gradient(circle at center, #0a1224 0%, #020408 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        }
+        /* Stark Tech Cam Efekti (Glassmorphism) */
+        .stark-panel { 
+            background: rgba(6, 12, 26, 0.6); 
+            border: 1px solid rgba(0, 149, 255, 0.15);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255,255,255,0.05);
+        }
+        /* Dijital Kılavuz Çizgileri Dokusu */
+        .hud-grid {
+            background-size: 20px 20px;
+            background-image: linear-gradient(to right, rgba(0, 149, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0, 149, 255, 0.02) 1px, transparent 1px);
+        }
+        /* Neon Parlama Efektleri */
+        .neon-glow-blue { box-shadow: 0 0 15px rgba(0, 113, 227, 0.25); }
+        .neon-glow-red { box-shadow: 0 0 15px rgba(255, 59, 48, 0.25); }
+    </style>
+</head>
+<body class="text-[#f5f5f7] p-4 md:p-8 min-h-screen hud-grid">
+    <div class="max-w-6xl mx-auto space-y-6">
+        
+        <!-- Taktiksel Üst Kontrol Paneli -->
+        <header class="stark-panel rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative overflow-hidden">
+            <!-- Dekoratif Köşe Çizgisi (Stark UI Ayrıntısı) -->
+            <div class="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-blue-500"></div>
+            <div class="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-blue-500"></div>
+            
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+                    <h1 class="text-xl font-bold uppercase tracking-widest text-white text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-blue-400">MISSION CONTROL // MATRIX</h1>
+                </div>
+                <p class="text-blue-400/60 text-xs font-mono mt-1">Sistem Durumu: Çevrimiçi // Grup Doluluk Dağılımını Yönetin</p>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-4 z-10">
+                <div class="flex items-center gap-2 font-mono text-xs">
+                    <span class="text-blue-400/80">GRUP ÜYESİ:</span>
+                    <select id="userSelect" class="bg-[#0b132b] border border-blue-500/30 rounded-xl px-4 py-2.5 text-sm font-semibold text-white focus:outline-none focus:ring-1 focus:ring-blue-400 transition-all cursor-pointer">
+                        <option value="serkan">Serkan (Vokal)</option>
+                        <option value="ilker">İlker (Gitar)</option>
+                        <option value="hasan">Hasan (Bas)</option>
+                        <option value="osman">Osman (Davul)</option>
+                        <option value="oguzhan">Oğuzhan (Klavye)</option>
+                    </select>
+                </div>
+                
+                <button id="saveBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs uppercase tracking-wider px-6 py-3 rounded-xl font-semibold transition-all neon-glow-blue">
+                    KAYDET VE GÜNCELLE
+                </button>
+            </div>
+        </header>
+
+        <!-- Ana HUD Ekranı -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            
+            <!-- Siber Takvim Modülü -->
+            <main class="lg:col-span-3 stark-panel rounded-2xl p-6 relative">
+                <div id="loadingOverlay" class="absolute inset-0 rounded-2xl bg-[#020408]/90 flex flex-col items-center justify-center font-mono text-blue-400 z-50 gap-3">
+                    <div class="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
+                    <span id="loadingText" class="text-xs uppercase tracking-wider text-blue-400/70">VERİLER ALINIYOR...</span>
+                </div>
+
+                <!-- Ay Navigasyonu -->
+                <div class="flex items-center justify-between mb-6 border-b border-blue-500/10 pb-4">
+                    <button id="prevMonth" class="bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 p-2.5 rounded-xl text-blue-400 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    </button>
+                    <h2 id="currentMonthYear" class="text-md font-bold uppercase tracking-widest font-mono text-white">TEMMUZ 2026</h2>
+                    <button id="nextMonth" class="bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 p-2.5 rounded-xl text-blue-400 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+
+                <!-- Gün İsimleri -->
+                <div class="grid grid-cols-7 text-center text-[10px] font-bold font-mono text-blue-400/50 uppercase tracking-widest mb-4">
+                    <div>Paz</div><div>Pzt</div><div>Sal</div><div>Çar</div><div>Per</div><div>Cum</div><div>Cmt</div>
+                </div>
+                
+                <div id="calendarGrid" class="grid grid-cols-7 gap-2"></div>
+            </main>
+
+            <!-- Sağ Panel: Taktik Rapor Bölümü -->
+            <aside class="space-y-4">
+                <div class="stark-panel rounded-2xl p-5 relative">
+                    <div class="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-blue-500/40"></div>
+                    <h3 class="text-[10px] font-bold font-mono uppercase tracking-widest text-blue-400/60 mb-4">// GRUP VERİ ANALİZİ</h3>
+                    <div id="rosterList" class="space-y-3"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        const DATABASE_URL = "https://script.google.com/macros/s/AKfycbxzYidVfS3EEtwyOPqzErrHgh2G4nQCTV8KF_tpaj6jiX6SfgY8eHTWerCs3JM7ujq6/exec";
+
+        const membersInfo = {
+            serkan: { name: 'Serkan', color: 'bg-red-500/20 border border-red-500/50 text-red-400' },
+            ilker: { name: 'İlker', color: 'bg-blue-500/20 border border-blue-500/50 text-blue-400' },
+            hasan: { name: 'Hasan', color: 'bg-emerald-500/20 border border-emerald-500/50 text-emerald-400' },
+            osman: { name: 'Osman', color: 'bg-amber-500/20 border border-amber-500/50 text-amber-400' },
+            oguzhan: { name: 'Oğuzhan', color: 'bg-purple-500/20 border border-purple-500/50 text-purple-400' }
+        };
+
+        let serverData = { serkan: [], ilker: [], hasan: [], osman: [], oguzhan: [] };
+        let localChanges = { serkan: [], ilker: [], hasan: [], osman: [], oguzhan: [] };
+        let currentUser = 'serkan';
+        let currentDate = new Date(2026, 6, 1);
+
+        const userSelect = document.getElementById('userSelect');
+        const saveBtn = document.getElementById('saveBtn');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+
+        userSelect.addEventListener('change', (e) => { currentUser = e.target.value; render(); });
+        prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); render(); });
+        nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); render(); });
+        saveBtn.addEventListener('click', pushToDatabase);
+
+        function fixDateFormat(dStr) {
+            if (!dStr) return "";
+            let clean = String(dStr).trim();
+            if (clean.includes(" ") && clean.length > 10) {
+                try {
+                    let d = new Date(clean);
+                    if (!isNaN(d.getTime())) {
+                        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                    }
+                } catch(e){}
+            }
+            if (clean.includes(".")) {
+                let p = clean.split(".");
+                if (p.length === 3) return `${p[2]}-${String(p[1]).padStart(2, '0')}-${String(p[0]).padStart(2, '0')}`;
+            }
+            if (clean.includes("-")) {
+                let p = clean.split("-");
+                if (p.length === 3) return `${p[0]}-${String(p[1]).padStart(2, '0')}-${String(p[2]).padStart(2, '0')}`;
+            }
+            return clean;
+        }
+
+        async function fetchDatabase() {
+            showLoading("DİJİTAL AĞ BAĞLANTISI KURULUYOR...");
+            try {
+                const res = await fetch(DATABASE_URL, { redirect: 'follow' });
+                const data = await res.json();
+                Object.keys(serverData).forEach(k => { 
+                    serverData[k] = (data[k] || []).map(d => fixDateFormat(d)).filter(Boolean); 
+                });
+                localChanges = JSON.parse(JSON.stringify(serverData));
+            } catch (e) { console.error(e); }
+            hideLoading();
+            render();
+        }
+
+        async function pushToDatabase() {
+            showLoading("VERİ KAPSÜLLERİ BULUTA AKTARILIYOR...");
+            try {
+                await fetch(DATABASE_URL, {
+                    method: 'POST',
+                    redirect: 'follow',
+                    body: JSON.stringify({ name: currentUser, busyDates: localChanges[currentUser] })
+                });
+                await fetchDatabase();
+                alert("MATRİS BAŞARIYLA GÜNCELLENDİ.");
+            } catch (e) { alert("BAĞLANTI HATASI."); }
+            hideLoading();
+        }
+
+        function toggleDate(dateStr) {
+            const list = localChanges[currentUser];
+            const idx = list.indexOf(dateStr);
+            if (idx > -1) list.splice(idx, 1);
+            else list.push(dateStr);
+            render();
+        }
+
+        function showLoading(text) {
+            document.getElementById('loadingText').innerText = text;
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        function render() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            const monthNames = ["OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK"];
+            document.getElementById('currentMonthYear').innerText = `// ${monthNames[month]} ${year}`;
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'bg-transparent min-h-[75px]';
+                grid.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const dateTarget = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                const busyMembers = Object.keys(localChanges).filter(k => localChanges[k].includes(dateTarget));
+                const isCurrentBusy = localChanges[currentUser].includes(dateTarget);
+                const isFree = busyMembers.length === 0;
+
+                const btn = document.createElement('button');
+                btn.className = `min-h-[85px] flex flex-col justify-between p-3 rounded-xl border font-mono transition-all duration-300 ${
+                    isCurrentBusy 
+                    ? 'border-red-500 bg-red-950/20 neon-glow-red' 
+                    : isFree 
+                    ? 'border-blue-500/10 bg-blue-950/5 hover:border-blue-400/40 hover:bg-blue-950/20' 
+                    : 'border-blue-400/30 bg-blue-950/30 hover:bg-blue-950/50'
+                }`;
+                btn.onclick = () => toggleDate(dateTarget);
+
+                btn.innerHTML = `
+                    <span class="text-xs font-bold ${isFree ? 'text-blue-400' : 'text-gray-500'}">${String(day).padStart(2, '0')}</span>
+                    <div class="flex flex-wrap gap-1 mt-2">
+                        ${busyMembers.map(k => `<span class="text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide ${membersInfo[k].color}">${membersInfo[k].name[0]}</span>`).join('')}
+                    </div>
+                `;
+                grid.appendChild(btn);
+            }
+
+            const roster = document.getElementById('rosterList');
+            roster.innerHTML = Object.keys(localChanges).map(k => `
+                <div class="flex items-center justify-between font-mono text-xs bg-[#091124]/60 p-3 rounded-xl border border-blue-500/10">
+                    <div class="flex items-center gap-2">
+                        <span class="h-2 w-2 rounded-full ${membersInfo[k].color.split(' ')[0]}"></span>
+                        <span class="text-gray-300">${membersInfo[k].name.toUpperCase()}</span>
+                    </div>
+                    <span class="text-[10px] text-blue-400/70 bg-blue-950/50 px-2 py-0.5 rounded border border-blue-500/20">${localChanges[k].length} DAYS BUSY</span>
+                </div>
+            `).join('');
+            
+            const hasChanges = JSON.stringify(serverData[currentUser]) !== JSON.stringify(localChanges[currentUser]);
+            if(hasChanges) {
+                saveBtn.className = "bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs uppercase tracking-wider px-6 py-3 rounded-xl font-semibold transition-all scale-[1.02] shadow-[0_0_15px_rgba(16,185,129,0.3)]";
+                saveBtn.innerText = "DEĞİŞİKLİKLERİ YAYINLA";
+            } else {
+                saveBtn.className = "bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs uppercase tracking-wider px-6 py-3 rounded-xl font-semibold transition-all neon-glow-blue";
+                saveBtn.innerText = "KAYDET VE GÜNCELLE";
+            }
+        }
+
+        fetchDatabase();
+    </script>
+</body>
+</html>
