@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title class="band-name-text">Band Engine - Takvim</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- DİNAMİK ÇEKİRDEK TEMA VE SİSTEM MOTORU -->
+    <link rel="stylesheet" href="./core/themes.css">
+    <script src="./core/app.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { min-height: 100vh; padding: 20px; display: flex; justify-content: center; }
+        .calendar-card { max-width: 640px; width: 100%; padding: 24px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; }
+        .user-select { background: rgba(0,0,0,0.4); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 8px; outline: none; font-size: 0.9rem; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+        .day-box { min-height: 65px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 6px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s; }
+        .day-box.busy { border-color: #ff3b30; background: rgba(255,59,48,0.2); }
+    </style>
+</head>
+<body class="theme-apple-pro">
+    <div class="calendar-card card">
+        <div class="header">
+            <h2><i class="fa-solid fa-calendar-days"></i> Müsaitlik Takvimi</h2>
+            <select id="userSelect" class="user-select"></select>
+        </div>
+
+        <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <script>
+        async function initCalendarTemplate() {
+            const selectEl = document.getElementById("userSelect");
+            
+            if (window.AppEngine) {
+                const config = await window.AppEngine.init();
+                if (config && config.members && config.members.length > 0) {
+                    selectEl.innerHTML = config.members.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+                } else {
+                    selectEl.innerHTML = `<option value="default">Üye Bulunamadı</option>`;
+                }
+            }
+            renderCalendarGrid();
+        }
+
+        function renderCalendarGrid() {
+            const gridEl = document.getElementById("calendarGrid");
+            gridEl.innerHTML = "";
+            const totalDays = 31;
+
+            for(let i = 1; i <= totalDays; i++) {
+                const dayBox = document.createElement("div");
+                dayBox.className = "day-box";
+                dayBox.innerHTML = `<span style="font-weight:600; font-size:0.85rem;">${i}</span>`;
+                dayBox.onclick = () => dayBox.classList.toggle("busy");
+                gridEl.appendChild(dayBox);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", initCalendarTemplate);
+    </script>
+</body>
+</html>
