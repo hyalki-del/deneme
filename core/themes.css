@@ -1,0 +1,79 @@
+/* 1. APPLE PRO MINIMAL */
+body.theme-apple-pro {
+    --bg-main: #000000;
+    --card-bg: rgba(28, 28, 30, 0.75);
+    --card-border: rgba(255, 255, 255, 0.12);
+    --primary-accent: #0071e3;
+    --text-main: #f5f5f7;
+    --text-muted: #86868b;
+    --card-radius: 20px;
+    --backdrop: blur(20px);
+    --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+}
+
+body.theme-apple-pro .card, 
+body.theme-apple-pro .welcome-card,
+body.theme-apple-pro .playlist-card,
+body.theme-apple-pro .apple-card,
+body.theme-apple-pro .admin-container {
+    background: var(--card-bg) !important;
+    backdrop-filter: var(--backdrop) !important;
+    -webkit-backdrop-filter: var(--backdrop) !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: var(--card-radius) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+}
+
+/* 2. CINEMATIC MARVEL */
+body.theme-marvel-hero {
+    --bg-main: radial-gradient(circle at center, #1c0805 0%, #050202 100%);
+    --card-bg: #140806;
+    --card-border: #ff4500;
+    --primary-accent: #ff4500;
+    --text-main: #ffffff;
+    --text-muted: #e0a080;
+    --card-radius: 6px;
+    --font-family: 'Impact', 'Trebuchet MS', sans-serif;
+}
+
+body.theme-marvel-hero .card, 
+body.theme-marvel-hero .welcome-card,
+body.theme-marvel-hero .playlist-card,
+body.theme-marvel-hero .apple-card,
+body.theme-marvel-hero .admin-container {
+    background: var(--card-bg) !important;
+    border: 2px solid var(--card-border) !important;
+    border-radius: var(--card-radius) !important;
+    box-shadow: 0 0 25px rgba(255, 69, 0, 0.35) !important;
+}
+
+/* 3. CYBERPUNK STAGE */
+body.theme-cyber-fusion {
+    --bg-main: #030712;
+    --card-bg: rgba(10, 25, 47, 0.85);
+    --card-border: #00f0ff;
+    --primary-accent: #00f0ff;
+    --text-main: #e6f1ff;
+    --text-muted: #8892b0;
+    --card-radius: 2px;
+    --backdrop: blur(12px);
+    --font-family: 'VT323', 'Courier New', monospace;
+}
+
+body.theme-cyber-fusion .card, 
+body.theme-cyber-fusion .welcome-card,
+body.theme-cyber-fusion .playlist-card,
+body.theme-cyber-fusion .apple-card,
+body.theme-cyber-fusion .admin-container {
+    background: var(--card-bg) !important;
+    backdrop-filter: var(--backdrop) !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: var(--card-radius) !important;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.25) !important;
+}
+
+body {
+    background: var(--bg-main) !important;
+    color: var(--text-main) !important;
+    font-family: var(--font-family) !important;
+}
