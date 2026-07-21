@@ -3,17 +3,27 @@ const AppEngine = {
 
     async init() {
         try {
+            // Cache-Busting: İstek sonuna zaman damgası ekleyerek tarayıcı önbelleğini kırıyoruz
             const response = await fetch('./config.json?t=' + new Date().getTime());
-            if (!response.ok) throw new Error("config.json okunamadı");
+            
+            if (!response.ok) {
+                throw new Error(`HTTP hatası! Durum: ${response.status}`);
+            }
             
             this.config = await response.json();
+            
+            // Temayı uygula
             this.applyTheme(this.config.themeLayout || 'apple-pro');
+            
+            // DOM elemanlarına veriyi bas
             this.injectGroupData();
 
             return this.config;
         } catch (err) {
-            console.warn("AppEngine varsayılan modda çalışıyor:", err);
+            console.error("[AppEngine Error] config.json yüklenemedi:", err);
+            // Varsayılan koruyucu tema
             this.applyTheme('apple-pro');
+            return null;
         }
     },
 
@@ -25,6 +35,8 @@ const AppEngine = {
 
     injectGroupData() {
         if (!this.config) return;
+
+        // Grup Adını Güncelle
         if (this.config.bandName) {
             document.title = `${this.config.bandName} - Band Engine`;
             document.querySelectorAll('.band-name-text').forEach(el => {
@@ -34,6 +46,7 @@ const AppEngine = {
     }
 };
 
+// DOM Yüklendiğinde Otomatik Başlat
 document.addEventListener('DOMContentLoaded', () => {
     AppEngine.init();
 });
