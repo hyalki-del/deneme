@@ -1,0 +1,224 @@
+[
+  {
+    "title": "Separate Ways",
+    "artist": "Journey",
+    "key": "Em",
+    "file": "./songs/journey-separateways.txt"
+  },
+  {
+    "title": "The Look",
+    "artist": "Roxette",
+    "key": "D",
+    "file": "./songs/roxette-thelook.txt"
+  },
+  {
+    "title": "Hold The Line",
+    "artist": "Toto",
+    "key": "F#m",
+    "file": "./songs/toto-holdtheline.txt"
+  },
+  {
+    "title": "Sari Cizmeli Mehmet Aga",
+    "artist": "Kurban",
+    "key": "N/A",
+    "file": "./songs/kurban-saricizmelimehmetaga.txt"
+  },
+  {
+    "title": "Wasting Love",
+    "artist": "Iron Maiden",
+    "key": "Em",
+    "file": "./songs/ironmaiden-wastinglove.txt"
+  },
+  {
+    "title": "Kryptonite",
+    "artist": "3 Doors Down",
+    "key": "Bm",
+    "file": "./songs/3doorsdown-kryptonite.txt"
+  },
+  {
+    "title": "Perfect Strangers",
+    "artist": "Deep Purple",
+    "key": "Dm",
+    "file": "./songs/deeppurple-perfectstrangers.txt"
+  },
+  {
+    "title": "Its My Life",
+    "artist": "Bon Jovi",
+    "key": "Cm",
+    "file": "./songs/bonjovi-itsmylife.txt"
+  },
+  {
+    "title": "Give In To Me",
+    "artist": "Three Days Grace",
+    "key": "N/A",
+    "file": "./songs/threedaysgrace-giveintome.txt"
+  },
+  {
+    "title": "Symphony Of Destruction",
+    "artist": "Megadeth",
+    "key": "Em",
+    "file": "./songs/megadeth-symphonyofdestruction.txt"
+  },
+  {
+    "title": "Islak Islak",
+    "artist": "Baris Akarsu",
+    "key": "N/A",
+    "file": "./songs/barisakarsu-islakislak.txt"
+  },
+  {
+    "title": "Bebek",
+    "artist": "Acil Servis",
+    "key": "N/A",
+    "file": "./songs/acilservis-bebek.txt"
+  },
+  {
+    "title": "Dont Chain My Heart",
+    "artist": "Toto",
+    "key": "Bm",
+    "file": "./songs/toto-dontchainmyheart.txt"
+  },
+  {
+    "title": "You Give Love A Bad Name",
+    "artist": "Bon Jovi",
+    "key": "Cm",
+    "file": "./songs/bonjovi-yougiveloveabadname.txt"
+  },
+  {
+    "title": "Sometimes I Feel Like Screaming",
+    "artist": "Deep Purple",
+    "key": "Dm",
+    "file": "./songs/deeppurple-sometimesifeellikescreaming.txt"
+  },
+  {
+    "title": "No Prayer For The Dying",
+    "artist": "Iron Maiden",
+    "key": "N/A",
+    "file": "./songs/ironmaiden-noprayerforthedying.txt"
+  },
+  {
+    "title": "Walking By Myself",
+    "artist": "Gary Moore",
+    "key": "E",
+    "file": "./songs/garymoore-walkingbymyself.txt"
+  },
+  {
+    "title": "Since You Been Gone",
+    "artist": "Rainbow",
+    "key": "G",
+    "file": "./songs/rainbow-sinceyoubeengone.txt"
+  },
+  {
+    "title": "Long Train Runnin",
+    "artist": "The Doobie Brothers",
+    "key": "Gm",
+    "file": "./songs/thedoobiebrothers-longtrainrunnin.txt"
+  },
+  {
+    "title": "I Surrender",
+    "artist": "Rainbow",
+    "key": "Gm",
+    "file": "./songs/rainbow-isurrender.txt"
+  },
+  {
+    "title": "Oh Pretty Woman",
+    "artist": "Gary Moore",
+    "key": "Cm",
+    "file": "./songs/garymoore-ohprettywoman.txt"
+  },
+  {
+    "title": "Born To Be Wild",
+    "artist": "Steppenwolf",
+    "key": "E",
+    "file": "./songs/steppenwolf-borntobewild.txt"
+  },
+  {
+    "title": "Here I Go Again",
+    "artist": "Whitesnake",
+    "key": "G",
+    "file": "./songs/whitesnake-hereigoagain.txt"
+  },
+  {
+    "title": "Livin On A Prayer",
+    "artist": "Bon Jovi",
+    "key": "Em",
+    "file": "./songs/bonjovi-livinonaprayer.txt"
+  },
+  {
+    "title": "Smoke On The Water",
+    "artist": "Deep Purple",
+    "key": "Gm",
+    "file": "./songs/deeppurple-smokeonthewater.txt"
+  },
+  {
+    "title": "Johnny B Goode",
+    "artist": "Chuck Berry",
+    "key": "Bb",
+    "file": "./songs/chuckberry-johnnybgoode.txt"
+  },
+  {
+    "title": "Blue Suede Shoes",
+    "artist": "Elvis Presley",
+    "key": "A",
+    "file": "./songs/elvispresley-bluesuedeshoes.txt"
+  },
+  {
+    "title": "Jailhouse Rock",
+    "artist": "The Blues Brothers",
+    "key": "N/A",
+    "file": "./songs/thebluesbrothers-jailhouserock.txt"
+  },
+  {
+    "title": "Fool For Your Loving",
+    "artist": "Whitesnake",
+    "key": "Am",
+    "file": "./songs/whitesnake-foolforyourloving.txt"
+  },
+  {
+    "title": "Burning Heart",
+    "artist": "Survivor",
+    "key": "Am",
+    "file": "./songs/survivor-burningheart.txt"
+  },
+  {
+    "title": "Eye Of The Tiger",
+    "artist": "Survivor",
+    "key": "Cm",
+    "file": "./songs/survivor-eyeofthetiger.txt"
+  },
+  {
+    "title": "The Final Countdown",
+    "artist": "Europe",
+    "key": "F#m",
+    "file": "./songs/europe-thefinalcountdown.txt"
+  },
+  {
+    "title": "Burn",
+    "artist": "Deep Purple",
+    "key": "Gm",
+    "file": "./songs/deeppurple-burn.txt"
+  },
+  {
+    "title": "In These Arms",
+    "artist": "Bon Jovi",
+    "key": "E",
+    "file": "./songs/bonjovi-inthesearms.txt"
+  },
+  {
+    "title": "For Whom The Bell Tolls",
+    "artist": "Metallica",
+    "key": "Em",
+    "file": "./songs/metallica-forwhomthebelltolls.txt"
+  },
+  {
+    "title": "Diamonds And Rust",
+    "artist": "Judas Priest",
+    "key": "Em",
+    "file": "./songs/judaspriest-diamondsandrust.txt"
+  },
+  {
+    "title": "Fear Of The Dark",
+    "artist": "Iron Maiden",
+    "key": "Dm",
+    "file": "./songs/ironmaiden-fearofthedark.txt"
+  }
+]
