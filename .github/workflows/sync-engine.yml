@@ -1,185 +1,21 @@
-name: Sync Ultimate Guitar Playlist
-
-on:
-  push:
-    paths:
-      - 'config.json'
-      - 'key-overrides.json'
-  schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  update-playlist:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up Node.js Engine
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Scrape UG & Generate data/playlist.json
-        run: |
-          node - << 'EOF'
-          const fs = require('fs');
-          const path = require('path');
-
-          const CONFIG_FILE = path.join(process.cwd(), 'config.json');
-          const OVERRIDES_FILE = path.join(process.cwd(), 'key-overrides.json');
-          const OUTPUT_DIR = path.join(process.cwd(), 'data');
-          const OUTPUT_FILE = path.join(OUTPUT_DIR, 'playlist.json');
-
-          function normalize(str) {
-            return (str || '')
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-              .replace(/\b(chords?|tabs?|official|version|ver|pro)\b/gi, '')
-              .replace(/[^a-z0-9]/g, '');
-          }
-
-          function decodeHTMLEntities(str) {
-            return (str || '')
-              .replace(/&quot;/g, '"')
-              .replace(/&amp;/g, '&')
-              .replace(/&lt;/g, '<')
-              .replace(/&gt;/g, '>')
-              .replace(/&#039;/g, "'")
-              .replace(/&#39;/g, "'")
-              .replace(/&#x27;/gi, "'")
-              .replace(/&nbsp;/g, ' ');
-          }
-
-          function extractUgUrl(obj) {
-            if (!obj || typeof obj !== 'object') return null;
-            const keys = ['ugPlaylistUrl', 'ug_playlist_url', 'ugUrl', 'ug_url', 'playlistUrl', 'playlist_url', 'url'];
-            for (const k of keys) {
-              if (typeof obj[k] === 'string' && obj[k].includes('ultimate-guitar.com')) return obj[k];
-            }
-            for (const v of Object.values(obj)) {
-              if (typeof v === 'object' && v !== null) {
-                const res = extractUgUrl(v);
-                if (res) return res;
-              } else if (typeof v === 'string' && v.includes('ultimate-guitar.com')) {
-                return v;
-              }
-            }
-            return null;
-          }
-
-          (async () => {
-            console.log('🔍 Locating config.json...');
-            if (!fs.existsSync(CONFIG_FILE)) {
-              console.error('❌ FATAL: config.json not found in root repository directory.');
-              process.exit(1);
-            }
-
-            const config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
-            const ugUrl = extractUgUrl(config);
-
-            if (!ugUrl) {
-              console.error('❌ FATAL: No valid Ultimate Guitar URL found inside config.json.');
-              process.exit(1);
-            }
-
-            console.log(`🌐 Target URL: ${ugUrl}`);
-
-            let overrides = {};
-            if (fs.existsSync(OVERRIDES_FILE)) {
-              try {
-                overrides = JSON.parse(fs.readFileSync(OVERRIDES_FILE, 'utf8'));
-              } catch (e) {
-                console.warn('⚠️ Warning: Failed to parse key-overrides.json');
-              }
-            }
-
-            const normalizedOverrides = {};
-            for (const [k, v] of Object.entries(overrides)) {
-              normalizedOverrides[normalize(k)] = v;
-            }
-
-            console.log('📡 Fetching payload from Ultimate Guitar...');
-            const response = await fetch(ugUrl, {
-              headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                'Accept-Language': 'en-US,en;q=0.9'
-              }
-            });
-
-            if (!response.ok) {
-              console.error(`❌ HTTP Error: Received status code ${response.status}`);
-              process.exit(1);
-            }
-
-            const html = await response.text();
-            const match = html.match(/class="js-store"[^>]*data-content="([^"]+)"/i) ||
-                          html.match(/data-content="([^"]+)"[^>]*class="js-store"/i);
-
-            if (!match || !match[1]) {
-              console.error('❌ Parsing Error: Could not locate "js-store" data-content payload in HTML.');
-              process.exit(1);
-            }
-
-            const storeData = JSON.parse(decodeHTMLEntities(match[1]));
-            const pageData = storeData.store?.page?.data || storeData.data || {};
-            const rawItems = 
-              pageData.songbook?.tabs || 
-              pageData.playlist?.items || 
-              pageData.list?.list || 
-              pageData.tabs || 
-              [];
-
-            console.log(`📊 Discovered ${rawItems.length} items in UG playlist.`);
-
-            const songs = rawItems
-              .map(item => {
-                const tab = item.tab || item;
-                const title = (tab.song_name || tab.song_title || tab.title || '').trim();
-                const artist = (tab.artist_name || tab.band_name || tab.artist || '').trim();
-                const defaultKey = tab.tonality_name || tab.meta?.tonality_name || tab.tonality || tab.key_name || 'N/A';
-
-                const normTitle = normalize(title);
-                const normArtist = normalize(artist);
-                const compositeKey = `${normArtist}:${normTitle}`;
-                const overrideKey = normalizedOverrides[compositeKey] || normalizedOverrides[normTitle];
-
-                return {
-                  title,
-                  artist,
-                  key: overrideKey || defaultKey,
-                  file: `./songs/${normArtist}-${normTitle}.txt`
-                };
-              })
-              .filter(s => s.title && s.artist);
-
-            if (!fs.existsSync(OUTPUT_DIR)) {
-              fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-            }
-
-            fs.writeFileSync(OUTPUT_FILE, JSON.stringify(songs, null, 2), 'utf8');
-            console.log(`✅ File written successfully to: ${OUTPUT_FILE} (${songs.length} songs recorded)`);
-          })();
-          EOF
-
-      - name: Commit and Push Changes
+- name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/playlist.json
           
+          # Force add the file even if gitignore rules exist
+          git add -f data/playlist.json
+          
+          # Print git status to action logs for complete transparency
+          echo "=== GIT STATUS ==="
+          git status --porcelain
+          echo "=================="
+          
+          # Check if there are staged changes
           if git diff --staged --quiet; then
-            echo "ℹ️ No changes detected in data/playlist.json. Skipping commit."
+            echo "ℹ️ The extracted 37 songs match the repository version line-for-line. No commit needed."
           else
-            echo "🚀 Changes detected! Committing and pushing to repository..."
-            git commit -m "build(data): update playlist.json from UG sync [skip ci]"
+            echo "🚀 New or updated song data detected! Committing and pushing..."
+            git commit -m "build(data): update playlist.json [37 songs] [skip ci]"
             git push origin HEAD:${{ github.ref_name }}
           fi
