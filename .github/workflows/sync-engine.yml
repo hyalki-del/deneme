@@ -1,157 +1,17 @@
-name: Sync Ultimate Guitar Playlist
+Run node -e "
+/home/runner/work/_temp/d2a2335f-996d-4115-9a65-76dca139f5b3.sh: line 1: ./songs/${normalize(artist)}-${normalize(title)}.txt: bad substitution
+/home/runner/work/_temp/d2a2335f-996d-4115-9a65-76dca139f5b3.sh: line 1: ${songs.length}: bad substitution
+[eval]:109
+      };
+      ^
 
-on:
-  schedule:
-    - cron: '0 0 * * *' # Her gün gece yarısı otomatik çalışır
-  workflow_dispatch: # GitHub arayüzünden manuel tetikleme butonu sağlar
+SyntaxError: Unexpected token '}'
+    at makeContextifyScript (node:internal/vm:185:14)
+    at node:internal/process/execution:107:22
+    at [eval]-wrapper:6:24
+    at runScript (node:internal/process/execution:101:62)
+    at evalScript (node:internal/process/execution:133:3)
+    at node:internal/main/eval_string:51:3
 
-permissions:
-  contents: write
-
-jobs:
-  update-playlist:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js Engine
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Scrape Ultimate Guitar & Generate playlist.json
-        run: |
-          node -e "
-          const fs = require('fs');
-
-          function normalize(str) {
-            return (str || '')
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-              .replace(/\b(chords?|tabs?|official|version|ver|pro)\b/gi, '')
-              .replace(/[^a-z0-9]/g, '');
-          }
-
-          function decodeHTMLEntities(str) {
-            return str
-              .replace(/&quot;/g, '\"')
-              .replace(/&amp;/g, '&')
-              .replace(/&lt;/g, '<')
-              .replace(/&gt;/g, '>')
-              .replace(/&#039;/g, \"'\");
-          }
-
-          (async () => {
-            try {
-              // 1. config.json Oku
-              if (!fs.existsSync('config.json')) {
-                console.error('CRITICAL: config.json bulunamadı!');
-                process.exit(1);
-              }
-
-              const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
-              const ugUrl = config.ugPlaylistUrl;
-
-              if (!ugUrl || !ugUrl.startsWith('http')) {
-                console.warn('WARNING: Geçerli bir ugPlaylistUrl bulunamadı.');
-                fs.writeFileSync('playlist.json', JSON.stringify([], null, 2));
-                process.exit(0);
-              }
-
-              // 2. key-overrides.json Oku (Varsa)
-              let overrides = {};
-              if (fs.existsSync('key-overrides.json')) {
-                try {
-                  overrides = JSON.parse(fs.readFileSync('key-overrides.json', 'utf8'));
-                } catch (e) {}
-              }
-
-              const normalizedOverrides = {};
-              for (const [title, key] of Object.entries(overrides)) {
-                normalizedOverrides[normalize(title)] = key;
-              }
-
-              console.log('Fetching Ultimate Guitar HTML:', ugUrl);
-
-              // 3. Ultimate Guitar'a İsteği At (User-Agent Zorunlu)
-              const response = await fetch(ugUrl, {
-                headers: {
-                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-                  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                  'Accept-Language': 'en-US,en;q=0.9'
-                }
-              });
-
-              if (!response.ok) {
-                throw new Error('UG HTTP isteği başarısız oldu. Status: ' + response.status);
-              }
-
-              const html = await response.text();
-
-              // 4. SSR Data Store Payload'ını Kazı (Scrape)
-              const match = html.match(/class=\"js-store\"[^\>]*data-content=\"([^\"]+)\"/i) || 
-                            html.match(/data-content=\"([^\"]+)\"[^\>]*class=\"js-store\"/i);
-
-              if (!match || !match[1]) {
-                throw new Error('Ultimate Guitar HTML yapısı içerisinde js-store verisi bulunamadı.');
-              }
-
-              const decodedJson = decodeHTMLEntities(match[1]);
-              const storeData = JSON.parse(decodedJson);
-
-              const pageData = storeData.store?.page?.data || storeData.data || {};
-              const rawItems = 
-                pageData.songbook?.tabs || 
-                pageData.playlist?.items || 
-                pageData.list?.list || 
-                pageData.tabs || 
-                [];
-
-              // 5. Veriyi Standart Şemamıza Dönüştür
-              const songs = rawItems.map(item => {
-                const tab = item.tab || item;
-                const title = tab.song_name || tab.song_title || tab.title || '';
-                const artist = tab.artist_name || tab.band_name || tab.artist || '';
-                
-                const defaultKey = 
-                  tab.tonality_name || 
-                  tab.meta?.tonality_name || 
-                  tab.tonality || 
-                  tab.key_name || 
-                  'N/A';
-
-                const normTitle = normalize(title);
-                const overrideKey = normalizedOverrides[normTitle];
-
-                return {
-                  title,
-                  artist,
-                  key: overrideKey || defaultKey,
-                  file: `./songs/${normalize(artist)}-${normalize(title)}.txt`
-                };
-              }).filter(s => s.title && s.artist);
-
-              console.log(`Başarıyla ${songs.length} şarkı UG üzerinden çekildi.`);
-
-              // 6. playlist.json Dosyasına Yaz
-              fs.writeFileSync('playlist.json', JSON.stringify(songs, null, 2));
-
-            } catch (err) {
-              console.error('Fatal Pipeline Failure:', err.message);
-              // CI/CD kilitlenmesin diye boş da olsa geçerli bir JSON bırakıyoruz
-              if (!fs.existsSync('playlist.json')) {
-                fs.writeFileSync('playlist.json', JSON.stringify([], null, 2));
-              }
-              process.exit(1);
-            }
-          })();
-          "
-
-      - name: Commit & Push Playlist Data
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add playlist.json
-          git diff --staged --quiet || (git commit -m "build: auto-update playlist.json from UG" && git push)
+Node.js v20.20.2
+Error: Process completed with exit code 1.
