@@ -2,7 +2,7 @@
   "bandName": "Bandit",
   "tagline": "Müziğinize Odaklanın, Karmaşayı Bize Bırakın!",
   "ugPlaylistUrl": "https://www.ultimate-guitar.com/user/playlist/shared?h=N4oafAvw08YnD1Pep-gUFb1r",
-  "themeLayout": "marvel-hero",
+  "themeLayout": "cyber-fusion",
   "members": [
     {
       "id": "serkan",
@@ -31,7 +31,7 @@
     }
   ],
   "images": [
-    "https://hyalki-del.github.io/babarock/b1.jpg",
-    "https://hyalki-del.github.io/babarock/b2.jpg"
+    "https://jpeg.org/images/jpeg-home.jpg",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfGzHIkUb1iob_iSQnshmwt2NlkklScOQhDAtKZMqZ0g&s=10"
   ]
 }
