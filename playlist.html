@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title class="band-name-text">Band Engine - Playlist</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- DİNAMİK ÇEKİRDEK TEMA VE SİSTEM MOTORU -->
+    <link rel="stylesheet" href="./core/themes.css">
+    <script src="./core/app.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 20px; }
+        .playlist-card { max-width: 540px; width: 100%; padding: 24px; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; }
+        .header-top h1 { font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+        .header-top h1 i { color: var(--primary-accent, #0071e3); }
+        .song-list { list-style: none; display: flex; flex-direction: column; gap: 10px; max-height: 65vh; overflow-y: auto; margin-top: 16px; padding-right: 4px; }
+        .song-item-card { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px 14px; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; }
+        .song-item-card:hover { border-color: var(--primary-accent, #0071e3); background: rgba(255,255,255,0.08); }
+        .song-title { font-weight: 600; font-size: 0.95rem; display: block; }
+        .song-artist { font-size: 0.8rem; color: var(--text-muted, #888); margin-top: 2px; }
+        .key-badge { font-size: 0.7rem; font-weight: 700; color: var(--primary-accent, #0071e3); border: 1px solid var(--primary-accent, #0071e3); padding: 2px 6px; border-radius: 4px; }
+        .yt-icon { color: #ff0000; font-size: 1.2rem; padding: 4px; transition: transform 0.2s; }
+        .yt-icon:hover { transform: scale(1.2); }
+    </style>
+</head>
+<body class="theme-apple-pro">
+    <div class="playlist-card card">
+        <div class="header-top">
+            <h1><i class="fa-solid fa-music"></i> <span class="band-name-text">Band Engine</span></h1>
+            <span id="songCount" style="font-size: 0.8rem; opacity: 0.7;">Yükleniyor...</span>
+        </div>
+        <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 6px;">Şarkı sözleri ve akorları görüntülemek için tıklayın.</p>
+        <ul class="song-list" id="songList"></ul>
+    </div>
+
+    <script>
+        async function loadPlaylistTemplate() {
+            const listEl = document.getElementById("songList");
+            const countEl = document.getElementById("songCount");
+
+            try {
+                const res = await fetch(`./playlist.json?t=${Date.now()}`);
+                if (!res.ok) throw new Error("playlist.json yüklenemedi");
+                const songs = await res.json();
+                
+                countEl.textContent = `${songs.length} Şarkı`;
+                listEl.innerHTML = "";
+
+                if (songs.length === 0) {
+                    listEl.innerHTML = `<li style="padding:20px; text-align:center; opacity:0.6;">Çalma listesinde şarkı bulunamadı.</li>`;
+                    return;
+                }
+
+                songs.forEach((song, i) => {
+                    const li = document.createElement("li");
+                    li.className = "song-item-card";
+                    const ytQuery = encodeURIComponent(`${song.title} ${song.artist}`);
+                    
+                    li.innerHTML = `
+                        <div>
+                            <span class="song-title">${i + 1}. ${song.title}</span>
+                            <span class="song-artist">${song.artist}</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            ${song.key && song.key !== 'N/A' ? `<span class="key-badge">${song.key}</span>` : ''}
+                            <a href="https://www.youtube.com/results?search_query=${ytQuery}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+                                <i class="fa-brands fa-youtube yt-icon"></i>
+                            </a>
+                        </div>
+                    `;
+                    
+                    // Dinamik Dosya Yolu Yönlendirmesi
+                    li.onclick = () => {
+                        const file = song.file || `./songs/${song.artist.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${song.title.toLowerCase().replace(/[^a-z0-9]/g, '-')}.txt`;
+                        window.open(file, '_blank');
+                    };
+                    listEl.appendChild(li);
+                });
+            } catch (err) {
+                console.warn(err);
+                listEl.innerHTML = `<li style="padding:20px; text-align:center; opacity:0.5;">Henüz şarkı listesi oluşturulmamış. Lütfen Admin panelinden UG playlist linkini girin.</li>`;
+                countEl.textContent = "0 Şarkı";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadPlaylistTemplate);
+    </script>
+</body>
+</html>
