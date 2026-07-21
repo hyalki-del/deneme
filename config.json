@@ -5,28 +5,28 @@
   "themeLayout": "cyber-fusion",
   "members": [
     {
-      "id": "serkan",
-      "name": "Serkan",
+      "id": "abc",
+      "name": "abc",
       "color": "#ff3b30"
     },
     {
-      "id": "ilker",
-      "name": "İlker",
+      "id": "kafa",
+      "name": "kafa",
       "color": "#0071e3"
     },
     {
-      "id": "hasan",
-      "name": "Hasan",
+      "id": "kol",
+      "name": "kol",
       "color": "#34c759"
     },
     {
-      "id": "osman",
-      "name": "Osman",
+      "id": "bacak",
+      "name": "bacak",
       "color": "#ff9500"
     },
     {
-      "id": "oguzhan",
-      "name": "Oğuzhan",
+      "id": "ayak",
+      "name": "ayak",
       "color": "#af52de"
     }
   ],
