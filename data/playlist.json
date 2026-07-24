@@ -220,5 +220,11 @@
     "artist": "Iron Maiden",
     "key": "Dm",
     "file": "./songs/ironmaiden-fearofthedark.txt"
+  },
+  {
+    "title": "Stormbringer",
+    "artist": "Deep Purple",
+    "key": "Em",
+    "file": "./songs/deeppurple-stormbringer.txt"
   }
 ]
