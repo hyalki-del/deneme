@@ -180,12 +180,6 @@
     "file": "./songs/survivor-burningheart.txt"
   },
   {
-    "title": "Eye Of The Tiger",
-    "artist": "Survivor",
-    "key": "Cm",
-    "file": "./songs/survivor-eyeofthetiger.txt"
-  },
-  {
     "title": "The Final Countdown",
     "artist": "Europe",
     "key": "F#m",
@@ -208,12 +202,6 @@
     "artist": "Metallica",
     "key": "Em",
     "file": "./songs/metallica-forwhomthebelltolls.txt"
-  },
-  {
-    "title": "Diamonds And Rust",
-    "artist": "Judas Priest",
-    "key": "Em",
-    "file": "./songs/judaspriest-diamondsandrust.txt"
   },
   {
     "title": "Fear Of The Dark",
