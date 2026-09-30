@@ -198,21 +198,15 @@
     "file": "./songs/bonjovi-inthesearms.txt"
   },
   {
-    "title": "For Whom The Bell Tolls",
-    "artist": "Metallica",
-    "key": "Em",
-    "file": "./songs/metallica-forwhomthebelltolls.txt"
-  },
-  {
-    "title": "Fear Of The Dark",
-    "artist": "Iron Maiden",
-    "key": "Dm",
-    "file": "./songs/ironmaiden-fearofthedark.txt"
-  },
-  {
     "title": "Stormbringer",
     "artist": "Deep Purple",
     "key": "Em",
     "file": "./songs/deeppurple-stormbringer.txt"
+  },
+  {
+    "title": "No Easy Way Out",
+    "artist": "Robert Tepper",
+    "key": "Em",
+    "file": "./songs/roberttepper-noeasywayout.txt"
   }
 ]
