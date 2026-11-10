@@ -202,5 +202,23 @@
     "artist": "Robert Tepper",
     "key": "Em",
     "file": "./songs/roberttepper-noeasywayout.txt"
+  },
+  {
+    "title": "Sakin Gelme",
+    "artist": "MF&Ouml;",
+    "key": "N/A",
+    "file": "./songs/mfouml-sakingelme.txt"
+  },
+  {
+    "title": "Ele Gune Karsi",
+    "artist": "MF&Ouml;",
+    "key": "N/A",
+    "file": "./songs/mfouml-elegunekarsi.txt"
+  },
+  {
+    "title": "Every Breath You Take",
+    "artist": "The Police",
+    "key": "Ab",
+    "file": "./songs/thepolice-everybreathyoutake.txt"
   }
 ]
