@@ -186,18 +186,6 @@
     "file": "./songs/deeppurple-burn.txt"
   },
   {
-    "title": "In These Arms",
-    "artist": "Bon Jovi",
-    "key": "E",
-    "file": "./songs/bonjovi-inthesearms.txt"
-  },
-  {
-    "title": "Stormbringer",
-    "artist": "Deep Purple",
-    "key": "Em",
-    "file": "./songs/deeppurple-stormbringer.txt"
-  },
-  {
     "title": "No Easy Way Out",
     "artist": "Robert Tepper",
     "key": "Em",
